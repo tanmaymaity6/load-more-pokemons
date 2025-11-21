@@ -1,73 +1,124 @@
-# React + TypeScript + Vite
+Pokédex – Load More Pokémon (React + Vite)
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A mini Pokédex application built using React, Vite, and custom Tailwind-like utility CSS (no Tailwind/PostCSS required to run inside WebContainer/StackBlitz).
+Displays Pokémon in rows of 5 cards per row, and clicking Load More loads 5 more Pokémon, creating additional rows.
 
-Currently, two official plugins are available:
+This project is intentionally simple and optimized for environments where Tailwind cannot run (StackBlitz WebContainer).
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+🚀 Features
+✔ 5 Pokémon per row
 
-## React Compiler
+Cards are displayed in a clean grid layout:
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+Row 1 → 5 cards  
+Row 2 → 5 cards  
+Row 3 → 5 cards  
+...
 
-## Expanding the ESLint configuration
+✔ Load More button
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+Each click fetches 5 more Pokémon from the PokéAPI and appends them to the bottom.
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+✔ Custom utility CSS (Tailwind-like)
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+Because Tailwind/PostCSS cannot run in StackBlitz WebContainer, this project implements a lightweight utility CSS framework manually (e.g., bg-blue-600, text-xl, border, grid-cols-5, gap-6, etc.).
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+✔ Prevents duplicate Pokémon
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+React Strict Mode re-renders effects twice — this project includes logic to ensure Pokémon are never duplicated.
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+✔ PokéAPI integration
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+Uses the official public PokéAPI (https://pokeapi.co/
+) to fetch Pokémon and their details.
+
+🧱 Tech Stack
+
+React 18
+
+Vite
+
+Custom Tailwind-like CSS utilities (no Tailwind dependency)
+
+TypeScript
+
+PokéAPI
+
+📁 Project Structure
+src/
+ ├── App.tsx                # Root component
+ ├── pokemon-list.tsx       # Main Pokédex grid + API logic
+ ├── utilities.css          # Tailwind-inspired utility classes
+ ├── index.css              # Base styles (light/dark background)
+ └── main.tsx               # App entrypoint
+
+▶️ How It Works
+1. Initial load
+
+The app fetches:
+
+https://pokeapi.co/api/v2/pokemon?limit=5
+
+
+and displays 5 Pokémon.
+
+2. Load More
+
+When the button is pressed:
+
+https://pokeapi.co/api/v2/pokemon?offset=5&limit=5
+https://pokeapi.co/api/v2/pokemon?offset=10&limit=5
+...
+
+
+Each batch of 5 adds a new row.
+
+3. Pokémon details
+
+For each entry, the app fetches the detail endpoint:
+
+https://pokeapi.co/api/v2/pokemon/{id}
+
+
+to get:
+
+Official artwork image
+
+Pokémon types
+
+Name
+
+ID
+
+🖼 UI Overview
+
+Each card includes:
+
+Pokémon official artwork
+
+Pokémon ID (#0001 style)
+
+Name
+
+Type badges (e.g., Grass, Water, Fire)
+
+Example:
+
++--------------------------------+
+|   (pokemon image)              |
+|   #0001                        |
+|   Bulbasaur                    |
+|   Grass  Poison                |
++--------------------------------+
+
+🏗 How to Run Locally
+Install dependencies:
+npm install
+
+Start the dev server:
+npm run dev
+
+
+App runs at:
+
+http://localhost:5173/
